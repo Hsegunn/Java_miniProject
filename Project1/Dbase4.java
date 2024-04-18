@@ -1,4 +1,4 @@
-//3일차
+//4일차
 package Project1;
 
 import java.sql.Connection;
@@ -26,10 +26,10 @@ class info {
 	}
 }
 
-public class Dbase3 {
+public class Dbase4 {
 	Connection con; // 디비 연결
-	String query1; // 쿼리문 내용
-	String query2; // 쿼리문 내용
+	String query1; // 쿼리문 내용1
+	String query2; // 쿼리문 내용2
 	Statement stmt; // 워크시트 (쿼리문 입력 공간)
 	ResultSet rs; // 결과
 	ArrayList<info> storeInfos = new ArrayList<>(); // 결과를 어레이리스트에 저장
@@ -66,7 +66,7 @@ public class Dbase3 {
 		query2 = "INSERT INTO PROD VALUES('" + pno + "','" + pname + "', '" + type + "','" + 
 				brand + "','" + quantity + "','" + price + "')";
 		stmt.executeUpdate(query1); // 워크시트에 쿼리문 입력하기
-		stmt.executeUpdate(query2); // 워크시트에 쿼리문 입력하기
+		stmt.executeUpdate(query2); 
 		System.out.println("물품이 입고되었습니다."+query2);
 	}
 	//출고데이터입력
@@ -76,24 +76,28 @@ public class Dbase3 {
 	    stmt.executeUpdate(query1);
 	    System.out.println("물품이 출고되었습니다. " + query1);
 	}
-	//현재품목 조회함수
+	// 현재품목 조회 함수
 	void selectCorCon() throws Exception {
 	    storeInfos.clear(); // 결과 리스트 초기화
 	    query1 = "SELECT pno, pname, type, brand, quantity, price FROM prod";
 	    System.out.println(query1);
-	    rs = stmt.executeQuery(query1); // 워크시트에 쿼리문 입력하고 데이터 받기
+	    rs = stmt.executeQuery(query1);
 	    
+	    int totalPrice = 0, totalQuantity = 0;
 	    while (rs.next()) {
-	        // ResultSet에서 가져온 값으로 info 객체 생성
 	        info temp = new info(rs.getInt("pno"), rs.getString("pname"), rs.getString("type"), 
-	        rs.getString("brand"), rs.getInt("quantity"), rs.getInt("price"));
-	        storeInfos.add(temp); // ArrayList에 객체 추가
+	                             rs.getString("brand"), rs.getInt("quantity"), rs.getInt("price"));
+	        storeInfos.add(temp);   // ArrayList에 객체 추가
+	        totalQuantity += temp.quantity;
+	        totalPrice += temp.quantity * temp.price;
 	    }
 	    
 	    for (info i : storeInfos) {
-	        System.out.println("번호:"+i.pno + " , " + "품명:"+i.pname +" , " + "종류:"+i.type + " , "+ 
-	                    "상표:"+i.brand+ " , " + "재고수:"+i.quantity+ " , " + "가격:"+i.price+"만원"); 
+	        System.out.println("번호: " + i.pno + ", 품명: " + i.pname + ", 종류: " + i.type + 
+	                           ", 상표: " + i.brand + ", 재고수: " + i.quantity + 
+	                           ", 가격: " + i.price + "만원");
 	    }
+	    System.out.println("총 물품: " + totalQuantity + "개,\n" +"총 가격: " + totalPrice + "만원");
 	}
 	//입고품목 조회함수
 	void selectInCon() throws Exception {
@@ -102,18 +106,25 @@ public class Dbase3 {
 	    System.out.println(query1);
 	    rs = stmt.executeQuery(query1); // 워크시트에 쿼리문 입력하고 데이터 받기
 	    
+	    int totalPrice = 0, totalQuantity = 0;
 	    while (rs.next()) {
 	        // ResultSet에서 가져온 값으로 info 객체 생성
 	        info temp = new info(rs.getInt("pno"), rs.getString("pname"), rs.getString("type"), 
 	        rs.getString("brand"), rs.getInt("quantity"), rs.getInt("price"));
 	        storeInfos.add(temp); // ArrayList에 객체 추가
+	        totalQuantity += temp.quantity;
+	        totalPrice += temp.quantity * temp.price;
 	    }
 	    
 	    for (info i : storeInfos) {
 	        System.out.println("번호:"+i.pno + " , " + "품명:"+i.pname +" , " + "종류:"+i.type + " , "+ 
 	                    "상표:"+i.brand+ " , " + "재고수:"+i.quantity+ " , " + "가격:"+i.price+"만원"); 
 	    }
+	    System.out.println("총 물품: " + totalQuantity + "개,\n" +"총 가격: " + totalPrice + "만원");
+
 	}
+	
+	
 
 	//출고품목 조회함수
 	void selectOutCon() throws Exception {
@@ -122,39 +133,64 @@ public class Dbase3 {
 	    System.out.println(query1);
 	    rs = stmt.executeQuery(query1); // 워크시트에 쿼리문 입력하고 데이터 받기
 	    
+	    int totalPrice = 0, totalQuantity = 0;
 	    while (rs.next()) {
 	        // ResultSet에서 가져온 값으로 info 객체 생성
 	        info temp = new info(rs.getInt("pno"), rs.getString("pname"), rs.getString("type"), 
 	        rs.getString("brand"), rs.getInt("quantity"), rs.getInt("price"));
 	        storeInfos.add(temp); // ArrayList에 객체 추가
+	        totalQuantity += temp.quantity;
+	        totalPrice += temp.quantity * temp.price;
 	    }
 	    
 	    for (info i : storeInfos) {
 	        System.out.println("번호:"+i.pno + " , " + "품명:"+i.pname +" , " + "종류:"+i.type + " , "+ 
 	                    "상표:"+i.brand+ " , " + "재고수:"+i.quantity+ " , " + "가격:"+i.price+"만원"); 
 	    }
+	    System.out.println("총 물품: " + totalQuantity + "개,\n" +"총 가격: " + totalPrice + "만원");
 	}
 	// 번호에 해당하는 함수를 물품테이블에서 삭제
 	void deleteCon(int pno) throws Exception {
 	    query2 = "DELETE FROM prod WHERE pno = '" + pno + "'";
 	    int del = stmt.executeUpdate(query2);
 	    if (del > 0) {
-	        System.out.println("물품 번호 " + pno + " 제품이 prod 테이블에서 삭제되었습니다.");
+	        System.out.println("물품 " + pno + "번 제품이 출고되어 리스트에서 제거됩니다.");
 	    } else {
-	        System.out.println("물품 번호 " + pno + " 제품이 prod 테이블에 존재하지 않습니다.");
+	        System.out.println("물품 " + pno + "번 제품이 존재하지 않습니다.");
 	    }
 	}
+	void deleteInCon(int pno) throws Exception {
+	    String query = "DELETE FROM INPROD WHERE pno = '" + pno + "'";
+	    int del = stmt.executeUpdate(query);
+	    if (del > 0) {
+	        System.out.println("물품 " + pno + "번 제품이 입고내역에서 삭제되었습니다.");
+	    } else {
+	        System.out.println("물품 " + pno + "번 제품이 입고내역에 존재하지 않습니다.");
+	    }
+	}
+	void deleteOutCon(int pno) throws Exception {
+	    String query = "DELETE FROM OUTPROD WHERE pno = '" + pno + "'";
+	    int del = stmt.executeUpdate(query);
+	    if (del > 0) {
+	        System.out.println("물품 " + pno + "번 제품이 출고내역에서 삭제되었습니다.");
+	    } else {
+	        System.out.println("물품 " + pno + "번 제품이 출고내역에 존재하지 않습니다.");
+	    }
+	}
+	
 	void menu() throws Exception {
         Scanner scanner = new Scanner(System.in);
         while (true) {
         	openCon();
             System.out.println("\n=== 메뉴 선택 ===");
             System.out.println("1. 물품 입고");
-            System.out.println("2. 물품 출고");
-            System.out.println("3. 입고 조회");
-            System.out.println("4. 출고 조회");
-            System.out.println("5. 현재물품 조회");
-            System.out.println("6. 종료");
+            System.out.println("2. 물품 입고내역삭제");
+            System.out.println("3. 물품 출고");
+            System.out.println("4. 물품 출고내역삭제");
+            System.out.println("5. 입고 내역조회");
+            System.out.println("6. 출고 내역조회");
+            System.out.println("7. 현재물품 조회");
+            System.out.println("8. 종료");
             System.out.print("선택: ");
             int choice = scanner.nextInt();
             switch (choice) {
@@ -176,9 +212,15 @@ public class Dbase3 {
                     
                     insertCon(pno, pname, type, brand, quantity, price);
                     break;
-                //물품출고
+                //물품 입고내역삭제
                 case 2:
-                    System.out.print("삭제할 물품 번호: ");
+                	System.out.print("입고내역을 삭제할 물품번호: ");
+                    int pnoIn = scanner.nextInt();
+                    deleteInCon(pnoIn);
+                    break;
+                //물품출고
+                case 3:
+                    System.out.print("출고할 물품 번호: ");
                     int deletePno = scanner.nextInt();
                     // 제품 세부 정보 조회
                     query1 = "SELECT pno, pname, type, brand, quantity, price FROM prod WHERE pno = '" + deletePno + "'";
@@ -198,20 +240,26 @@ public class Dbase3 {
                         System.out.println("해당 번호의 물품이 존재하지 않습니다.");
                     }
                     break;
-                //입고조회
-                case 3:
+                //물품 출고내역삭제
+                case 4:
+                	System.out.print("출고내역을 삭제할 물품번호: ");
+                    int pnoOut = scanner.nextInt();
+                    deleteOutCon(pnoOut);
+                    break;
+                //입고내역조회	
+                case 5:
                 	selectInCon();
                     break;
-                //출고조회
-                case 4:
+                //출고내역조회
+                case 6:
                 	selectOutCon();
                     break;
                 //현재물품조회
-                case 5:
+                case 7:
                 	selectCorCon();
                     break;
                 //종료
-                case 6:
+                case 8:
                 	closeCon();
                 	System.out.println("프로그램을 종료합니다.");
                     scanner.close();
@@ -223,7 +271,7 @@ public class Dbase3 {
     }
 	
 	public static void main(String[] args) {
-		Dbase3 db = new Dbase3();
+		Dbase4 db = new Dbase4();
 		try {
 			db.menu();
 		} catch (Exception e) {
